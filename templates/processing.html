@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing - YOLO Specimen Counter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 50px 30px;
+            text-align: center;
+        }
+        
+        .spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .title {
+            color: #2d3748;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            color: #718096;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .progress-steps {
+            text-align: left;
+            margin: 30px 0;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #718096;
+        }
+        
+        .step.active {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .step.completed {
+            color: #38a169;
+        }
+        
+        .step-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .step.active .step-icon {
+            background: #667eea;
+            color: white;
+        }
+        
+        .step.completed .step-icon {
+            background: #38a169;
+            color: white;
+        }
+        
+        .status {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #2d3748;
+        }
+        
+        .emoji {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+        
+        .success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="spinner" id="spinner"></div>
+        
+        <h1 class="title">Processing Images</h1>
+        <p class="subtitle">AI is analyzing your specimens...</p>
+        
+        <div class="progress-steps">
+            <div class="step completed">
+                <div class="step-icon">✓</div>
+                <span>Images uploaded successfully</span>
+            </div>
+            <div class="step active" id="processingStep">
+                <div class="step-icon">•</div>
+                <span>Running YOLO detection</span>
+            </div>
+            <div class="step" id="resultsStep">
+                <div class="step-icon">3</div>
+                <span>Preparing results</span>
+            </div>
+        </div>
+        
+        <div class="status" id="statusMessage">
+            <div class="emoji">🔬</div>
+            Analyzing specimens with AI detection...
+        </div>
+        
+        <div id="resultSection" style="display: none;">
+            <a href="/results" class="btn">View Results</a>
+        </div>
+    </div>
+
+    <script>
+        let processingComplete = false;
+        
+        // Start processing automatically
+        window.addEventListener('load', function() {
+            setTimeout(startProcessing, 1000);
+        });
+        
+        function startProcessing() {
+            fetch('/run_yolo')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        showSuccess();
+                    } else {
+                        showError(data.message || 'Processing failed');
+                    }
+                })
+                .catch(error => {
+                    showError('Network error: ' + error.message);
+                });
+        }
+        
+        function showSuccess() {
+            processingComplete = true;
+            
+            // Hide spinner
+            document.getElementById('spinner').style.display = 'none';
+            
+            // Update steps
+            document.getElementById('processingStep').classList.remove('active');
+            document.getElementById('processingStep').classList.add('completed');
+            document.getElementById('processingStep').querySelector('.step-icon').textContent = '✓';
+            
+            document.getElementById('resultsStep').classList.add('completed');
+            document.getElementById('resultsStep').querySelector('.step-icon').textContent = '✓';
+            
+            // Update status
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.className = 'status success';
+            statusMessage.innerHTML = `
+                <div class="emoji">✅</div>
+                Processing completed successfully!<br>
+                Your specimen analysis is ready.
+            `;
+            
+            // Show results button
+            document.getElementById('resultSection').style.display = 'block';
+            
+            // Update title
+            document.querySelector('.title').textContent = 'Processing Complete!';
+            document.querySelector('.subtitle').textContent = 'Click below to view your results';
+        }
+        
+        function showError(message) {
+            // Hide spinner
+            document.getElementById('spinner').style.display = 'none';
+            
+            // Update steps
+            document.getElementById('processingStep').classList.remove('active');
+            
+            // Update status
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.className = 'status error';
+            statusMessage.innerHTML = `
+                <div class="emoji">❌</div>
+                Processing failed: ${message}<br>
+                <br>
+                <a href="/" class="btn">Try Again</a>
+            `;
+            
+            // Update title
+            document.querySelector('.title').textContent = 'Processing Failed';
+            document.querySelector('.subtitle').textContent = 'Please try uploading your images again';
+        }
+    </script>
+</body>
+</html>
