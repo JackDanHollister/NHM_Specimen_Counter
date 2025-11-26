@@ -23,9 +23,12 @@ UPLOAD_FOLDER = 'yolo_count_specimens/images_to_test'
 RESULTS_FOLDER = 'shareable_results'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'JPG', 'JPEG', 'PNG'}
 MAX_FILES = 10
+STATIC_FOLDER = 'static'
 
 # Ensure upload directory exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+# Ensure static directory exists for zip outputs
+os.makedirs(STATIC_FOLDER, exist_ok=True)
 
 # Model zoo directory for selectable models
 MODEL_ZOO_DIR = Path(__file__).resolve().parent / "model_zoo"
