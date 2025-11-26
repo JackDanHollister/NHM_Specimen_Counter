@@ -102,30 +102,6 @@
             font-size: 14px;
         }
 
-        .helper-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .howto-btn {
-            background: #edf2f7;
-            color: #2d3748;
-            border: 1px solid #cbd5e0;
-            border-radius: 10px;
-            padding: 10px 12px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s ease, transform 0.2s ease;
-        }
-
-        .howto-btn:hover {
-            background: #e2e8f0;
-            transform: translateY(-1px);
-        }
-
         .model-select {
             margin: 10px 0 20px;
         }
@@ -180,6 +156,28 @@
             background: #cbd5e0;
             cursor: not-allowed;
             transform: none;
+        }
+
+        .howto-btn {
+            margin-top: 12px;
+            width: 100%;
+            background: #edf2f7;
+            color: #2d3748;
+            border: 1px solid #cbd5e0;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .howto-btn:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
         }
         
         .alert {
@@ -244,14 +242,11 @@
                 {% endif %}
             </div>
 
-            <div class="helper-row">
-                <div></div>
-                <a class="howto-btn" href="/how-to" target="_blank">How To Use</a>
-            </div>
-            
             <button type="submit" class="process-btn" id="processBtn" disabled>
                 Count Specimens
             </button>
+
+            <a class="howto-btn" href="/how-to" target="_blank">How To Use</a>
         </form>
     </div>
 
