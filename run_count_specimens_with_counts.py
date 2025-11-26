@@ -124,7 +124,7 @@ def main():
     parser = argparse.ArgumentParser(description="Run specimen counting with selectable model.")
     parser.add_argument(
         "--model-path",
-        default="best.pt",
+        default="model_zoo/best.pt",
         help="Path to YOLO model weights (.pt)",
     )
     args = parser.parse_args()

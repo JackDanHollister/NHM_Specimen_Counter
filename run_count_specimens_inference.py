@@ -18,7 +18,9 @@ def main():
     
     # Paths (relative to repo)
     base_dir = Path(__file__).resolve().parent
-    model_path = base_dir / "best.pt"
+    model_path = base_dir / "model_zoo" / "best.pt"
+    if not model_path.exists():
+        model_path = base_dir / "best.pt"
     test_images_dir = base_dir / "yolo_count_specimens" / "images_to_test"
     output_dir = base_dir / "runs" / "count_specimens_inference"
     

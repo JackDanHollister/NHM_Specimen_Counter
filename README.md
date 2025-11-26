@@ -9,7 +9,7 @@ When on the NHM network, use: https://spec-count.nhm.ac.uk/ (internal only).
 ## Models
 
 - Place YOLO `.pt` weight files in `model_zoo/` to make them selectable in the UI.
-- `best.pt` in the project root is used as a default if present.
+- `best.pt` lives in `model_zoo/` as the default.
 - Selection is remembered per upload session.
 
 ## How it works
@@ -27,8 +27,7 @@ yolo/
 ├── start_server.sh            # Startup script for the server
 ├── run_count_specimens_with_counts.py  # Counting script
 ├── run_count_specimens_inference.py    # Standalone inference helper
-├── best.pt                    # Trained model weights
-├── model_zoo/                 # Additional selectable models
+├── model_zoo/                 # Selectable models (default best.pt lives here)
 ├── templates/                 # Web pages
 │   ├── upload.html
 │   ├── processing.html
@@ -41,7 +40,7 @@ yolo/
 
 ## Troubleshooting
 
-- Ensure `best.pt` exists at the project root.
+- Ensure a model exists in `model_zoo/` (default `best.pt` lives there).
 - Ensure `yolo_count_specimens/images_to_test/` and `shareable_results/` are writable.
 - To test the counting script directly:
   ```bash
