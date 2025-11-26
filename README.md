@@ -47,12 +47,3 @@ yolo/
   cd /home/appuser/yolo
   /usr/local/bin/python run_count_specimens_with_counts.py
   ```
-
-## Cleanup
-
-```bash
-cd /home/appuser/yolo
-rm -f yolo_count_specimens/images_to_test/*
-rm -rf shareable_results/specimen_counts_*
-rm -f static/*.zip
-```
