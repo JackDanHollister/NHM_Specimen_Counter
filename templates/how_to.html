@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How To Use – Specimen Counter</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            max-width: 520px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+            padding: 28px;
+        }
+        h1 {
+            color: #2d3748;
+            font-size: 26px;
+            margin-bottom: 14px;
+        }
+        p {
+            color: #4a5568;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            font-size: 15px;
+        }
+        ol {
+            margin-left: 18px;
+            color: #2d3748;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+        li { margin-bottom: 10px; }
+        .note {
+            background: #edf2f7;
+            border: 1px solid #cbd5e0;
+            border-radius: 10px;
+            padding: 12px;
+            color: #2d3748;
+            font-size: 14px;
+            margin-top: 12px;
+        }
+        .close-link {
+            display: inline-block;
+            margin-top: 14px;
+            color: #5a67d8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .close-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>How To Use</h1>
+        <p>Quick steps to run a count:</p>
+        <ol>
+            <li>Click the upload area and pick up to 10 photos (JPG/PNG). Keep drawers clear and well-lit.</li>
+            <li>Choose a model from the dropdown. If you’re unsure, leave the default selected.</li>
+            <li>Press “Count Specimens”. Wait while the model runs.</li>
+            <li>When done, click “View Results” to download the zip with annotated images and summary files.</li>
+        </ol>
+        <div class="note">
+            Need another model? Drop a new <code>.pt</code> file into <code>model_zoo/</code> and refresh the page to see it.
+        </div>
+        <a class="close-link" href="/" target="_self">Back to upload</a>
+    </div>
+</body>
+</html>

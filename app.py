@@ -100,6 +100,12 @@ def upload_page():
     session['selected_model'] = default_model
     return render_template('upload.html', models=models, default_model=default_model)
 
+
+@app.route('/how-to')
+def how_to():
+    """Simple how-to page"""
+    return render_template('how_to.html')
+
 @app.route('/upload', methods=['POST'])
 def upload_files():
     """Handle file uploads"""

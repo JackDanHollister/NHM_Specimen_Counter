@@ -102,6 +102,30 @@
             font-size: 14px;
         }
 
+        .helper-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .howto-btn {
+            background: #edf2f7;
+            color: #2d3748;
+            border: 1px solid #cbd5e0;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .howto-btn:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+
         .model-select {
             margin: 10px 0 20px;
         }
@@ -218,6 +242,11 @@
                 {% else %}
                     <div class="alert alert-error">No models found. Add .pt files to model_zoo/.</div>
                 {% endif %}
+            </div>
+
+            <div class="helper-row">
+                <div></div>
+                <a class="howto-btn" href="/how-to" target="_blank">How To Use</a>
             </div>
             
             <button type="submit" class="process-btn" id="processBtn" disabled>
