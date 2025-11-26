@@ -126,12 +126,12 @@ def run_yolo():
     try:
         # Run the existing YOLO script
         result = subprocess.run([
-            '/home/jack/miniconda3/envs/yolo/bin/python', 
+            '/usr/local/bin/python',
             'run_count_specimens_with_counts.py'
         ], 
         capture_output=True, 
         text=True, 
-        cwd='/home/jack/Desktop/yolo'
+        cwd='/home/appuser/yolo'
         )
         
         if result.returncode == 0:
@@ -190,6 +190,5 @@ def download_file(filename):
 
 if __name__ == '__main__':
     print("🔬 YOLO Specimen Counter Web Service Starting...")
-    print("📱 Access from phone via ngrok tunnel")
-    print("🌐 Local access: http://localhost:5000")
+    print("🌐 Local access: http://localhost:5000 (internal use)")
     app.run(host='0.0.0.0', port=5000, debug=True)

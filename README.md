@@ -1,100 +1,64 @@
-# YOLO Specimen Counter Web Service
+# NHM Specimen Counter (internal)
 
-## ✅ Setup Complete!
+Designed to count specimens in drawers to support NHC auditing and other counting tasks within the NHM. Provides a Flask-based internal web UI for uploading images and running the YOLO counting script.
 
-Your YOLO specimen counter is now ready to run as a web service accessible from phones!
+## Start the service
 
-## 🚀 How to Start the Service
-
-### Option 1: Use the startup script
+From the project directory:
 ```bash
-cd ~/Desktop/yolo
+cd /home/appuser/yolo
 ./start_server.sh
 ```
 
-### Option 2: Manual start
+Manual start:
 ```bash
-cd ~/Desktop/yolo
-conda activate yolo
-python app.py
+cd /home/appuser/yolo
+/usr/local/bin/python app.py
 ```
 
-## 📱 Access from Phone
+The service listens on port 5000 for internal use (no public tunneling).
 
-### Local Testing (same WiFi network):
-- Find your Pi's IP address: `hostname -I`
-- Visit: `http://[PI_IP_ADDRESS]:5000`
+## How it works
 
-### Internet Access (via ngrok):
-1. **Install ngrok** (if not already installed):
-   ```bash
-   # Download and install ngrok from https://ngrok.com/download
-   ```
+1. Upload up to 10 images via the web page.
+2. The YOLO counting script (`run_count_specimens_with_counts.py`) processes them and writes results.
+3. Download a zip with annotated images plus summary text/CSV.
+4. Old uploads are cleaned before each run.
 
-2. **Start ngrok tunnel** (in a separate terminal):
-   ```bash
-   ngrok http 5000
-   ```
-
-3. **Share the https URL** with users - they can access it from anywhere!
-
-## 🔧 How It Works
-
-1. **Upload**: Users drag-and-drop up to 10 images on the web page
-2. **Process**: Your existing YOLO script runs automatically
-3. **Download**: Users get a zip file with:
-   - Annotated images (with detection boxes)
-   - Summary CSV and text files
-4. **Cleanup**: Old uploads are automatically removed
-
-## 📁 File Structure
+## File structure
 
 ```
 yolo/
-├── app.py                    # Flask web server
-├── start_server.sh          # Startup script
-├── run_count_specimens...py  # Your original YOLO script (unchanged)
-├── best.pt                  # Your trained model
-├── templates/               # Web pages
-│   ├── upload.html         # Main upload page
-│   ├── processing.html     # Progress page
-│   └── results.html        # Results & download page
-├── static/                 # Generated zip files
-├── yolo_count_specimens/   
-│   └── images_to_test/     # Uploaded images go here
-└── shareable_results/      # YOLO output goes here
+├── app.py                     # Flask web server
+├── start_server.sh            # Startup script for the server
+├── run_count_specimens_with_counts.py  # Counting script
+├── run_count_specimens_inference.py    # Standalone inference helper
+├── best.pt                    # Trained model weights
+├── templates/                 # Web pages
+│   ├── upload.html
+│   ├── processing.html
+│   └── results.html
+├── static/                    # Generated zip files
+├── yolo_count_specimens/
+│   └── images_to_test/        # Uploaded images
+└── shareable_results/         # YOLO outputs (annotated images, summaries)
 ```
 
-## 🛠️ Troubleshooting
+## Troubleshooting
 
-### If the server won't start:
-```bash
-cd ~/Desktop/yolo
-conda activate yolo
-pip install flask
-python app.py
-```
-
-### If uploads fail:
-- Check that `yolo_count_specimens/images_to_test/` exists
-- Ensure the directory is writable
-
-### If processing fails:
-- Test your original script manually:
+- Ensure `best.pt` exists at the project root.
+- Ensure `yolo_count_specimens/images_to_test/` and `shareable_results/` are writable.
+- To test the counting script directly:
   ```bash
-  python run_count_specimens_with_counts.py
+  cd /home/appuser/yolo
+  /usr/local/bin/python run_count_specimens_with_counts.py
   ```
 
-## 🔄 Starting Fresh
+## Cleanup
 
-To clear everything and start over:
 ```bash
-cd ~/Desktop/yolo
+cd /home/appuser/yolo
 rm -f yolo_count_specimens/images_to_test/*
 rm -rf shareable_results/specimen_counts_*
 rm -f static/*.zip
 ```
-
-## 🎯 Ready to Use!
-
-Your proof-of-concept specimen counter web service is complete and ready for testing. Users can now upload images from their phones and get AI-powered specimen counts back instantly!

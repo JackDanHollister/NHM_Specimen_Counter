@@ -16,10 +16,11 @@ def main():
     print("🔬 YOLO Count Specimens Inference")
     print("=" * 50)
     
-    # Paths
-    model_path = "/home/jackdh/projects/specimen*detection/runs/count_specimens/weights/best.pt"
-    test_images_dir = "/home/jackdh/projects/specimen*detection/data/yolo_count_specimens/images_to_test"
-    output_dir = "/home/jackdh/projects/specimen*detection/runs/count_specimens_inference"
+    # Paths (relative to repo)
+    base_dir = Path(__file__).resolve().parent
+    model_path = base_dir / "best.pt"
+    test_images_dir = base_dir / "yolo_count_specimens" / "images_to_test"
+    output_dir = base_dir / "runs" / "count_specimens_inference"
     
     # Check if model exists
     if not os.path.exists(model_path):
@@ -46,9 +47,9 @@ def main():
     
     # Inference parameters
     inference_params = {
-        'source': test_images_dir,
-        'project': os.path.dirname(output_dir),
-        'name': os.path.basename(output_dir),
+        'source': str(test_images_dir),
+        'project': str(output_dir.parent),
+        'name': output_dir.name,
         'save': True,           # Save annotated images
         'save_txt': True,       # Save detection results as txt
         'save_conf': True,      # Save confidence scores
