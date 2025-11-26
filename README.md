@@ -37,13 +37,3 @@ yolo/
 │   └── images_to_test/        # Uploaded images
 └── shareable_results/         # YOLO outputs (annotated images, summaries)
 ```
-
-## Troubleshooting
-
-- Ensure a model exists in `model_zoo/` (default `best.pt` lives there).
-- Ensure `yolo_count_specimens/images_to_test/` and `shareable_results/` are writable.
-- To test the counting script directly:
-  ```bash
-  cd /home/appuser/yolo
-  /usr/local/bin/python run_count_specimens_with_counts.py
-  ```
