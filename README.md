@@ -6,6 +6,12 @@ Designed to count specimens in drawers to support NHC auditing and other countin
 
 When on the NHM network, use: https://spec-count.nhm.ac.uk/ (internal only).
 
+## Models
+
+- Place YOLO `.pt` weight files in `model_zoo/` to make them selectable in the UI.
+- `best.pt` in the project root is used as a default if present.
+- Selection is remembered per upload session.
+
 ## How it works
 
 1. Upload up to 10 images via the web page.
@@ -22,6 +28,7 @@ yolo/
 ├── run_count_specimens_with_counts.py  # Counting script
 ├── run_count_specimens_inference.py    # Standalone inference helper
 ├── best.pt                    # Trained model weights
+├── model_zoo/                 # Additional selectable models
 ├── templates/                 # Web pages
 │   ├── upload.html
 │   ├── processing.html

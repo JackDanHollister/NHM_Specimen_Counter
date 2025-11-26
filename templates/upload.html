@@ -101,6 +101,28 @@
             align-items: center;
             font-size: 14px;
         }
+
+        .model-select {
+            margin: 10px 0 20px;
+        }
+
+        .model-select label {
+            display: block;
+            margin-bottom: 6px;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .model-select select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #2d3748;
+            background: #fff;
+        }
         
         .remove-file {
             background: #e53e3e;
@@ -182,6 +204,21 @@
             </div>
             
             <ul class="file-list" id="fileList"></ul>
+
+            <div class="model-select">
+                <label for="modelSelect">Model</label>
+                {% if models %}
+                    <select id="modelSelect" name="model_name">
+                        {% for model in models %}
+                            <option value="{{ model.path }}" {% if model.path == default_model %}selected{% endif %}>
+                                {{ model.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <div class="alert alert-error">No models found. Add .pt files to model_zoo/.</div>
+                {% endif %}
+            </div>
             
             <button type="submit" class="process-btn" id="processBtn" disabled>
                 Count Specimens
@@ -194,6 +231,7 @@
         const fileInput = document.getElementById('fileInput');
         const fileList = document.getElementById('fileList');
         const processBtn = document.getElementById('processBtn');
+        const hasModels = {{ 'true' if models else 'false' }};
         
         let selectedFiles = [];
 
@@ -246,7 +284,7 @@
         }
         
         function updateProcessButton() {
-            processBtn.disabled = selectedFiles.length === 0;
+            processBtn.disabled = selectedFiles.length === 0 || !hasModels;
             processBtn.textContent = selectedFiles.length > 0 ? 
                 `Count Specimens (${selectedFiles.length} image${selectedFiles.length !== 1 ? 's' : ''})` : 
                 'Count Specimens';

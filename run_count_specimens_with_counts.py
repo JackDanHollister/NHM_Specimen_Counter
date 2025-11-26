@@ -15,6 +15,7 @@ from pathlib import Path
 from ultralytics import YOLO
 from datetime import datetime
 import shutil
+import argparse
 
 def draw_count_banner(image, count, confidence_avg=None):
     """
@@ -120,22 +121,35 @@ def save_detection_summary(output_dir, results_data):
             ])
 
 def main():
+    parser = argparse.ArgumentParser(description="Run specimen counting with selectable model.")
+    parser.add_argument(
+        "--model-path",
+        default="best.pt",
+        help="Path to YOLO model weights (.pt)",
+    )
+    args = parser.parse_args()
+
     print("🔬 YOLO Count Specimens - Enhanced Inference with Count Display")
     print("=" * 65)
     
+    base_dir = Path(__file__).resolve().parent
+
     # Paths
-    model_path = "best.pt"
-    test_images_dir = "yolo_count_specimens/images_to_test"
-    base_output_dir = "./shareable_results"
+    model_path = Path(args.model_path)
+    if not model_path.is_absolute():
+        model_path = base_dir / model_path
+
+    test_images_dir = base_dir / "yolo_count_specimens" / "images_to_test"
+    base_output_dir = base_dir / "shareable_results"
     
     # Check if model exists
-    if not os.path.exists(model_path):
+    if not model_path.exists():
         print(f"❌ Model not found: {model_path}")
         print("Please train the model first using: python scripts/train_count_specimens.py")
         sys.exit(1)
     
     # Check if test images exist
-    if not os.path.exists(test_images_dir):
+    if not test_images_dir.exists():
         print(f"❌ Test images directory not found: {test_images_dir}")
         sys.exit(1)
     
@@ -148,7 +162,7 @@ def main():
     
     # Load model
     try:
-        model = YOLO(model_path)
+        model = YOLO(str(model_path))
         print("✅ Model loaded successfully")
     except Exception as e:
         print(f"❌ Error loading model: {e}")

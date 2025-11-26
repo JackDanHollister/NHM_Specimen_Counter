@@ -12,7 +12,7 @@ import zipfile
 import glob
 from pathlib import Path
 from datetime import datetime
-from flask import Flask, request, render_template, redirect, url_for, send_file, flash, jsonify
+from flask import Flask, request, render_template, redirect, url_for, send_file, flash, jsonify, session
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -26,6 +26,19 @@ MAX_FILES = 10
 
 # Ensure upload directory exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Model zoo directory for selectable models
+MODEL_ZOO_DIR = Path(__file__).resolve().parent / "model_zoo"
+MODEL_ZOO_DIR.mkdir(exist_ok=True)
+
+
+def get_available_models():
+    """Return list of available model paths."""
+    models = sorted(MODEL_ZOO_DIR.glob("*.pt"))
+    fallback = Path(__file__).resolve().parent / "best.pt"
+    if fallback.exists() and fallback not in models:
+        models.insert(0, fallback)
+    return [str(path) for path in models]
 
 def allowed_file(filename):
     """Check if file extension is allowed"""
@@ -78,13 +91,22 @@ def create_results_zip(results_folder):
 @app.route('/')
 def upload_page():
     """Main upload page"""
-    return render_template('upload.html')
+    model_paths = get_available_models()
+    models = [{'path': m, 'name': Path(m).name} for m in model_paths]
+    default_model = models[0]['path'] if models else ''
+    session['selected_model'] = default_model
+    return render_template('upload.html', models=models, default_model=default_model)
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
     """Handle file uploads"""
     if 'files' not in request.files:
         flash('No files selected')
+        return redirect(request.url)
+
+    available_models = get_available_models()
+    if not available_models:
+        flash('No models available. Add .pt files to model_zoo/.')
         return redirect(request.url)
     
     files = request.files.getlist('files')
@@ -96,6 +118,12 @@ def upload_files():
     if len(files) > MAX_FILES:
         flash(f'Maximum {MAX_FILES} files allowed')
         return redirect(request.url)
+
+    # Persist selected model for processing step
+    selected_model = request.form.get('model_name', '').strip()
+    if selected_model not in available_models and available_models:
+        selected_model = available_models[0]
+    session['selected_model'] = selected_model
     
     # Clean up any old uploads first
     cleanup_old_uploads()
@@ -124,10 +152,22 @@ def process_images():
 def run_yolo():
     """Run the YOLO processing script"""
     try:
+        model_path = session.get('selected_model') or ''
+        available_models = get_available_models()
+        if not model_path and available_models:
+            model_path = available_models[0]
+        if model_path and model_path not in available_models:
+            model_path = available_models[0] if available_models else ''
+
+        if not model_path:
+            return jsonify({'status': 'error', 'message': 'No model available. Add .pt files to model_zoo/.'})
+
         # Run the existing YOLO script
         result = subprocess.run([
             '/usr/local/bin/python',
-            'run_count_specimens_with_counts.py'
+            'run_count_specimens_with_counts.py',
+            '--model-path',
+            model_path
         ], 
         capture_output=True, 
         text=True, 
