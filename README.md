@@ -2,21 +2,9 @@
 
 Designed to count specimens in drawers to support NHC auditing and other counting tasks within the NHM. Provides a Flask-based internal web UI for uploading images and running the YOLO counting script.
 
-## Start the service
+## Access
 
-From the project directory:
-```bash
-cd /home/appuser/yolo
-./start_server.sh
-```
-
-Manual start:
-```bash
-cd /home/appuser/yolo
-/usr/local/bin/python app.py
-```
-
-The service listens on port 5000 for internal use (no public tunneling).
+When on the NHM network, use: https://spec-count.nhm.ac.uk/ (internal only).
 
 ## How it works
 
